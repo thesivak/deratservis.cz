@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 100px;
+}
+
+body {
+  font-family: "Roboto", ui-sans-serif, system-ui, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+}
+
+.accent-text {
+  font-family: "Orbitron", sans-serif;
+  letter-spacing: 1px;
+}
+
+.nav-link {
+  position: relative;
+  color: rgb(55 65 81);
+  transition: color 0.3s ease;
+}
+
+@media (min-width: 768px) {
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    transform: translateX(-50%);
+    border-radius: 2px;
+    background-color: #ef4444;
+    transition: width 0.3s ease;
+  }
+
+  .nav-link.active::after,
+  .blog-page .nav-link[href*="blog"]::after {
+    width: 60%;
+  }
+}
+
+.nav-link.active,
+.blog-page .nav-link[href*="blog"] {
+  color: rgb(194 65 12);
+  font-weight: 600;
+}
+
+#mobile-menu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-in-out;
+}
+
+#mobile-menu.hidden {
+  display: none;
+}
+
+#mobile-menu:not(.hidden) {
+  max-height: 100vh;
+}
+
+.prose :where(a):not(:where([class~="not-prose"] *)) {
+  color: rgb(194 65 12);
+  text-decoration-color: rgb(254 215 170);
+}

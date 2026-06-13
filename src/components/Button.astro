@@ -1,0 +1,29 @@
+---
+import Icon from "./Icon.astro";
+
+const {
+  href,
+  type = "button",
+  icon,
+  fullWidth = false,
+  class: className = ""
+} = Astro.props;
+
+const classes = [
+  "inline-flex items-center justify-center px-6 py-3 bg-orange-700 hover:bg-orange-800 text-white font-semibold rounded-md transition-colors duration-200",
+  fullWidth ? "w-full" : "",
+  className
+].filter(Boolean).join(" ");
+---
+
+{href ? (
+  <a href={href} class={classes}>
+    {icon && <Icon name={icon} class="mr-2 h-4 w-4" />}
+    <slot />
+  </a>
+) : (
+  <button type={type} class={classes}>
+    {icon && <Icon name={icon} class="mr-2 h-4 w-4" />}
+    <slot />
+  </button>
+)}

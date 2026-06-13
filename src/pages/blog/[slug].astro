@@ -1,0 +1,82 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Button from "@/components/Button.astro";
+import BlogCard from "@/components/BlogCard.astro";
+
+export async function getStaticPaths() {
+  const posts = (await getCollection("blog")).filter((post) => !post.data.draft);
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+const allPosts = (await getCollection("blog")).filter((item) => !item.data.draft && item.slug !== post.slug);
+const relatedPosts = allPosts
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf())
+  .slice(0, 3);
+
+const date = new Intl.DateTimeFormat("cs-CZ", { day: "2-digit", month: "2-digit", year: "numeric" }).format(post.data.publishedAt);
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://deratservis.cz";
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": post.data.title,
+  "description": post.data.excerpt,
+  "image": `${siteUrl}${post.data.featuredImage}`,
+  "datePublished": post.data.publishedAt.toISOString(),
+  "dateModified": post.data.updatedAt.toISOString(),
+  "author": { "@type": "Organization", "name": "DERATservis" },
+  "publisher": {
+    "@type": "Organization",
+    "name": "DERATservis",
+    "logo": { "@type": "ImageObject", "url": `${siteUrl}/images/DERATservisLogo.png` }
+  }
+};
+---
+
+<BaseLayout
+  title={post.data.seo.title}
+  description={post.data.seo.description}
+  image={post.data.featuredImage}
+  type="article"
+  publishedAt={post.data.publishedAt.toISOString()}
+  updatedAt={post.data.updatedAt.toISOString()}
+  isBlogPage={true}
+  jsonLd={jsonLd}
+>
+  <article class="bg-white pb-16 pt-32">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-4xl">
+        <div class="mb-8">
+          <div class="mb-4 flex items-center text-sm text-gray-500"><time datetime={post.data.publishedAt.toISOString()}>{date}</time></div>
+          <h1 class="mb-6 text-4xl font-bold text-gray-900">{post.data.title}</h1>
+          <div class="mb-8 overflow-hidden rounded-lg">
+            <img src={post.data.featuredImage} alt={post.data.featuredImageAlt} class="h-auto w-full" width="1200" height="675" />
+          </div>
+          <div class="prose prose-lg prose-slate mx-auto max-w-none">
+            <Content />
+          </div>
+          <div class="mt-12 text-center">
+            <Button href="/#kontakt" icon="send">Zaslat poptávku</Button>
+          </div>
+        </div>
+        <div class="mt-12 border-t border-gray-200 pt-8">
+          <Button href="/blog/" icon="arrowLeft">Zpět na všechny články</Button>
+        </div>
+      </div>
+    </div>
+    {relatedPosts.length > 0 && (
+      <div class="mt-16 bg-gray-50 py-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="mx-auto max-w-7xl">
+            <h2 class="mb-8 text-3xl font-bold text-gray-900">Mohlo by vás také zajímat</h2>
+            <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+              {relatedPosts.map((relatedPost) => <BlogCard post={relatedPost} compact={true} />)}
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+  </article>
+</BaseLayout>

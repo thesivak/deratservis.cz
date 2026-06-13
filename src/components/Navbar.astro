@@ -1,0 +1,85 @@
+---
+import Button from "./Button.astro";
+
+const { isBlogPage = false, hasBlog = true } = Astro.props;
+const homePrefix = isBlogPage ? "/" : "";
+---
+
+<nav id="main-navbar" class="fixed left-0 right-0 top-0 z-50 bg-transparent py-4 transition-all duration-300">
+  <div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-8">
+    <a href="/" class="flex items-center font-bold">
+      <img src="/images/DERATservisLogo.png" alt="DERATservis logo" class="h-10 w-auto sm:h-16" width="96" height="96" />
+      <span class="ml-2 text-xl font-bold text-orange-700 sm:ml-4 sm:text-3xl" style="font-family: 'Orbitron', sans-serif; letter-spacing: 1px;">DERATservis</span>
+    </a>
+    <div class="hidden items-center space-x-1 md:flex">
+      <a href={`${homePrefix}#uvod`} class="nav-link rounded-md px-4 py-2 text-sm font-medium uppercase tracking-wide hover:text-orange-500">Úvod</a>
+      <a href={`${homePrefix}#o-nas`} class="nav-link rounded-md px-4 py-2 text-sm font-medium uppercase tracking-wide hover:text-orange-500">O nás</a>
+      <a href={`${homePrefix}#reference`} class="nav-link rounded-md px-4 py-2 text-sm font-medium uppercase tracking-wide hover:text-orange-500">Reference</a>
+      {hasBlog && <a href={isBlogPage ? "/blog/" : "#blog"} class="nav-link rounded-md px-4 py-2 text-sm font-medium uppercase tracking-wide hover:text-orange-500">Blog</a>}
+      <a href={`${homePrefix}#kontakt`} class="nav-link rounded-md px-4 py-2 text-sm font-medium uppercase tracking-wide hover:text-orange-500">Kontakt</a>
+    </div>
+    <div class="hidden md:block">
+      <Button href="tel:+420777644414" icon="phone">+420 777 644 414</Button>
+    </div>
+    <div class="z-20 flex items-center md:hidden">
+      <button id="mobile-menu-button" class="rounded-md p-2 text-gray-700 hover:bg-orange-50 hover:text-orange-700 focus:outline-none" aria-label="Otevřít navigaci" aria-expanded="false">
+        <svg id="hamburger-icon" width="24" height="24" fill="none" viewBox="0 0 24 24" class="block"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>
+        <svg id="close-icon" width="24" height="24" fill="none" viewBox="0 0 24 24" class="hidden"><path d="M6 18 18 6M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-menu" class="absolute left-0 right-0 top-[72px] z-40 hidden bg-white/95 shadow-lg backdrop-blur-sm">
+    <div class="space-y-4 px-4 py-6">
+      <a href={`${homePrefix}#uvod`} class="nav-link block rounded-md px-4 py-3 text-base font-medium hover:bg-orange-50 hover:text-orange-700">Úvod</a>
+      <a href={`${homePrefix}#o-nas`} class="nav-link block rounded-md px-4 py-3 text-base font-medium hover:bg-orange-50 hover:text-orange-700">O nás</a>
+      <a href={`${homePrefix}#reference`} class="nav-link block rounded-md px-4 py-3 text-base font-medium hover:bg-orange-50 hover:text-orange-700">Reference</a>
+      {hasBlog && <a href={isBlogPage ? "/blog/" : "#blog"} class="nav-link block rounded-md px-4 py-3 text-base font-medium hover:bg-orange-50 hover:text-orange-700">Blog</a>}
+      <a href={`${homePrefix}#kontakt`} class="nav-link block rounded-md px-4 py-3 text-base font-medium hover:bg-orange-50 hover:text-orange-700">Kontakt</a>
+      <Button href="tel:+420777644414" icon="phone" class="w-full">+420 777 644 414</Button>
+    </div>
+  </div>
+</nav>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const navbar = document.getElementById("main-navbar");
+    const mobileMenuButton = document.getElementById("mobile-menu-button");
+    const mobileMenu = document.getElementById("mobile-menu");
+    const hamburgerIcon = document.getElementById("hamburger-icon");
+    const closeIcon = document.getElementById("close-icon");
+    if (!navbar || !mobileMenuButton || !mobileMenu || !hamburgerIcon || !closeIcon) return;
+
+    const updateNavbarStyle = () => {
+      if (window.scrollY > 20) {
+        navbar.classList.add("bg-white/90", "backdrop-blur-md", "shadow-md");
+      } else {
+        navbar.classList.remove("bg-white/90", "backdrop-blur-md", "shadow-md");
+      }
+    };
+
+    let isMenuOpen = false;
+    mobileMenuButton.addEventListener("click", () => {
+      isMenuOpen = !isMenuOpen;
+      mobileMenuButton.setAttribute("aria-expanded", String(isMenuOpen));
+      mobileMenu.classList.toggle("hidden", !isMenuOpen);
+      hamburgerIcon.classList.toggle("hidden", isMenuOpen);
+      closeIcon.classList.toggle("hidden", !isMenuOpen);
+      if (isMenuOpen) navbar.classList.add("bg-white", "shadow-md");
+      else updateNavbarStyle();
+    });
+
+    mobileMenu.querySelectorAll(".nav-link").forEach((link) => {
+      link.addEventListener("click", () => {
+        isMenuOpen = false;
+        mobileMenuButton.setAttribute("aria-expanded", "false");
+        mobileMenu.classList.add("hidden");
+        hamburgerIcon.classList.remove("hidden");
+        closeIcon.classList.add("hidden");
+        setTimeout(updateNavbarStyle, 100);
+      });
+    });
+
+    updateNavbarStyle();
+    window.addEventListener("scroll", updateNavbarStyle, { passive: true });
+  });
+</script>

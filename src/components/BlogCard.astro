@@ -1,0 +1,28 @@
+---
+import Icon from "./Icon.astro";
+const { post, compact = false } = Astro.props as { post: any; compact?: boolean };
+const date = post.data.publishedAt;
+const formatted = new Intl.DateTimeFormat("cs-CZ", { day: "2-digit", month: "2-digit", year: "numeric" }).format(date);
+---
+
+<article class="overflow-hidden rounded-xl border border-orange-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+  <a href={`/blog/${post.slug}/`}>
+    <div class={compact ? "h-48 overflow-hidden" : "aspect-video overflow-hidden"}>
+      <img src={post.data.featuredImage} alt={post.data.featuredImageAlt} class="h-full w-full object-cover transition-transform duration-500 hover:scale-105" width="800" height="450" loading="lazy" />
+    </div>
+  </a>
+  <div class={compact ? "p-5" : "p-6"}>
+    <div class={`flex items-center text-sm text-gray-500 ${compact ? "mb-2" : "mb-3"}`}>
+      <Icon name="calendar" class="mr-1.5 h-4 w-4" />
+      <time datetime={date.toISOString()}>{formatted}</time>
+    </div>
+    <h3 class={`${compact ? "text-lg" : "text-xl"} mb-2 font-bold text-gray-900`}>
+      <a href={`/blog/${post.slug}/`} class="transition-colors hover:text-orange-700">{post.data.title}</a>
+    </h3>
+    <p class={`mb-4 text-gray-600 ${compact ? "text-sm" : ""}`}>{post.data.excerpt}</p>
+    <a href={`/blog/${post.slug}/`} class={`inline-flex items-center font-medium text-orange-700 transition-colors hover:text-orange-800 ${compact ? "text-sm" : ""}`}>
+      Číst více
+      <Icon name="arrowRight" class={`ml-1 ${compact ? "h-4 w-4" : "h-5 w-5"}`} />
+    </a>
+  </div>
+</article>

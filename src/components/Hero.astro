@@ -1,0 +1,37 @@
+---
+import Button from "./Button.astro";
+import Icon from "./Icon.astro";
+const { hero } = Astro.props as { hero: any };
+---
+
+<section id="uvod" class="relative overflow-hidden bg-gradient-to-b from-orange-50 to-white pb-20 pt-28 md:pb-28 md:pt-36">
+  <div class="absolute -right-20 -top-20 h-96 w-96 rounded-full bg-orange-200 opacity-10 blur-3xl"></div>
+  <div class="absolute -bottom-20 -left-20 h-80 w-80 rounded-full bg-orange-300 opacity-10 blur-3xl"></div>
+  <div class="relative z-10 mx-auto max-w-7xl px-8">
+    <div class="grid items-center gap-12 md:grid-cols-2">
+      <div class="flex flex-col space-y-6 font-semibold">
+        <div class="mb-2 inline-flex">
+          <div class="whitespace-nowrap rounded-full bg-orange-100 px-4 py-1.5 text-xs font-medium text-orange-800 sm:text-sm">{hero.eyebrow}</div>
+        </div>
+        <h1 class="text-5xl font-bold leading-tight tracking-tight md:text-6xl" set:html={hero.headline} />
+        <p class="max-w-xl text-xl leading-relaxed text-gray-600">{hero.subheadline}</p>
+        <div class="flex flex-wrap gap-4">
+          <Button href={hero.primaryCtaHref}>{hero.primaryCta}</Button>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+        {hero.cards.map((card: any) => (
+          <div class="rounded-xl border-l-4 border-orange-700 bg-white/80 p-5 shadow-md backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+            <div class="flex h-full flex-col">
+              <div class="mb-4 self-start rounded-lg bg-orange-100 p-3">
+                <Icon name={card.icon} class="h-6 w-6 text-orange-700" />
+              </div>
+              <h4 class="text-xl font-bold uppercase tracking-wide text-orange-800">{card.title}</h4>
+              <p class="mt-2 text-sm text-gray-600">{card.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

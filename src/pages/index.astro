@@ -1,0 +1,62 @@
+---
+import { getCollection, getEntry } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Hero from "@/components/Hero.astro";
+import About from "@/components/About.astro";
+import References from "@/components/References.astro";
+import BlogPreview from "@/components/BlogPreview.astro";
+import ContactForm from "@/components/ContactForm.astro";
+
+const home = await getEntry("pages", "home");
+if (!home) throw new Error("Missing home page content");
+const { Content } = await home.render();
+const references = await getCollection("references");
+const posts = (await getCollection("blog")).filter((post) => !post.data.draft && post.data.publishedAt <= new Date());
+const services = await getCollection("services");
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://deratservis.cz";
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "DERATservis",
+    "url": siteUrl,
+    "image": `${siteUrl}/images/DERATservisLogo.png`,
+    "telephone": home.data.contact.phone,
+    "email": home.data.contact.email,
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "B. Němcové 449",
+      "postalCode": "78815",
+      "addressLocality": "Velké Losiny",
+      "addressCountry": "CZ"
+    },
+    "areaServed": ["Olomouc", "Prostějov", "Přerov", "Šumperk", "Jeseník", "Olomoucký kraj"],
+    "priceRange": "$$"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "DERATservis",
+    "url": siteUrl
+  },
+  ...services.map((service) => ({
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": service.data.title,
+    "description": service.data.description,
+    "areaServed": "Olomoucký kraj",
+    "provider": { "@type": "LocalBusiness", "name": "DERATservis" }
+  }))
+];
+---
+
+<BaseLayout title={home.data.seo.title} description={home.data.seo.description} image={home.data.seo.image} jsonLd={jsonLd} hasBlog={posts.length > 0}>
+  <Hero hero={home.data.hero} />
+  <About about={home.data.about}>
+    <Content />
+  </About>
+  <References copy={home.data.references} references={references} />
+  <BlogPreview copy={home.data.blogPreview} posts={posts} />
+  <ContactForm contact={home.data.contact} />
+</BaseLayout>

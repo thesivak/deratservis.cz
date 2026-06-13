@@ -1,0 +1,33 @@
+---
+import Icon from "./Icon.astro";
+const { about } = Astro.props as { about: any };
+---
+
+<section id="o-nas" class="relative overflow-hidden py-16 md:py-24">
+  <div class="relative z-10 mx-auto max-w-7xl px-8">
+    <div class="mb-16 text-center">
+      <h2 class="text-4xl font-bold text-gray-900 md:text-5xl">{about.title}</h2>
+      <p class="mx-auto mt-4 max-w-2xl text-lg font-medium text-gray-700 md:text-xl">{about.subtitle}</p>
+    </div>
+    <div class="grid items-center gap-12 md:grid-cols-2">
+      <img src={about.image} alt={about.imageAlt} class="relative z-10 h-auto w-full rounded-lg object-cover shadow-xl" width="900" height="600" loading="lazy" />
+      <div class="space-y-6">
+        <h3 class="text-2xl font-bold text-gray-900 md:text-3xl">{about.heading}</h3>
+        <div class="prose prose-lg text-lg text-gray-600">
+          <slot />
+        </div>
+        <div class="grid grid-cols-2 gap-4 pt-4">
+          {about.features.map((feature: any) => (
+            <div class="flex items-start space-x-3">
+              <Icon name={feature.icon} class="mt-1 h-6 w-6 flex-shrink-0 text-orange-700" />
+              <div>
+                <h4 class="font-medium text-gray-900">{feature.title}</h4>
+                <p class="text-sm text-gray-600">{feature.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

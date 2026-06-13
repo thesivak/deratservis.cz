@@ -1,0 +1,31 @@
+---
+const {
+  title,
+  description,
+  canonical = new URL(Astro.url.pathname, Astro.site).toString(),
+  image = "/images/about-action.jpg",
+  type = "website",
+  publishedAt,
+  updatedAt
+} = Astro.props;
+
+const imageUrl = new URL(image, Astro.site).toString();
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta name="robots" content="index, follow" />
+<meta name="author" content="DERATservis" />
+<link rel="canonical" href={canonical} />
+<meta property="og:type" content={type} />
+<meta property="og:url" content={canonical} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={imageUrl} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={canonical} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageUrl} />
+{publishedAt && <meta property="article:published_time" content={publishedAt} />}
+{updatedAt && <meta property="article:modified_time" content={updatedAt} />}

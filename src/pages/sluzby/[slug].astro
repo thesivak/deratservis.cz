@@ -1,0 +1,62 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Button from "@/components/Button.astro";
+
+export async function getStaticPaths() {
+  const services = await getCollection("services");
+  return services.map((service) => ({ params: { slug: service.slug }, props: { service } }));
+}
+
+const { service } = Astro.props;
+const { Content } = await service.render();
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://deratservis.cz";
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": service.data.title,
+    "description": service.data.description,
+    "areaServed": "Olomoucký kraj",
+    "provider": { "@type": "LocalBusiness", "name": "DERATservis", "url": siteUrl }
+  },
+  service.data.faq.length > 0 && {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": service.data.faq.map((item) => ({
+      "@type": "Question",
+      "name": item.question,
+      "acceptedAnswer": { "@type": "Answer", "text": item.answer }
+    }))
+  }
+].filter(Boolean);
+---
+
+<BaseLayout title={service.data.seo.title} description={service.data.seo.description} jsonLd={jsonLd}>
+  <article class="bg-white pb-16 pt-32">
+    <div class="mx-auto max-w-4xl px-6">
+      <p class="mb-3 text-sm font-semibold uppercase tracking-wide text-orange-700">Služby DERATservis</p>
+      <h1 class="mb-6 text-4xl font-bold text-gray-900 md:text-5xl">{service.data.title}</h1>
+      <p class="mb-8 text-xl leading-relaxed text-gray-600">{service.data.description}</p>
+      <div class="prose prose-lg max-w-none">
+        <Content />
+      </div>
+      {service.data.faq.length > 0 && (
+        <section class="mt-12">
+          <h2 class="mb-6 text-3xl font-bold text-gray-900">Časté otázky</h2>
+          <div class="space-y-4">
+            {service.data.faq.map((item) => (
+              <div class="rounded-lg border border-orange-100 bg-orange-50/40 p-5">
+                <h3 class="font-semibold text-gray-900">{item.question}</h3>
+                <p class="mt-2 text-gray-700">{item.answer}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+      <div class="mt-12">
+        <Button href="/#kontakt">Nezávazná konzultace</Button>
+      </div>
+    </div>
+  </article>
+</BaseLayout>

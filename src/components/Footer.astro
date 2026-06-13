@@ -1,0 +1,63 @@
+---
+const year = new Date().getFullYear();
+const { hasBlog = true } = Astro.props as { hasBlog?: boolean };
+const services = [
+  ["Deratizace", "/sluzby/deratizace/"],
+  ["Dezinfekce", "/sluzby/dezinfekce/"],
+  ["Dezinsekce", "/sluzby/dezinsekce/"],
+  ["Ochrana dřeva", "/sluzby/ochrana-dreva/"]
+];
+---
+
+<footer class="bg-gradient-to-b from-gray-900 to-black text-gray-200">
+  <div class="mx-auto max-w-7xl px-6 py-16">
+    <div class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
+      <div class="space-y-5">
+        <h3 class="text-2xl font-bold text-white">Deratservis</h3>
+        <p class="text-base text-gray-300">Profesionální služby v oblasti dezinfekce, dezinsekce, deratizace a ochrany dřeva proti dřevokaznému hmyzu v Olomouckém kraji.</p>
+      </div>
+      <div>
+        <h3 class="mb-5 text-xl font-bold text-white">Naše služby</h3>
+        <ul class="space-y-3">
+          {services.map(([label, href]) => (
+            <li><a href={href} class="group flex items-center text-gray-300 transition-colors hover:text-white"><span class="mr-2 h-1.5 w-1.5 rounded-full bg-custom-red transition-transform group-hover:scale-125"></span>{label}</a></li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <h3 class="mb-5 text-xl font-bold text-white">Rychlé odkazy</h3>
+        <ul class="space-y-3">
+          {[
+            ["Úvod", "/#uvod"],
+            ["O nás", "/#o-nas"],
+            ["Reference", "/#reference"],
+            ...(hasBlog ? [["Blog", "/blog/"]] : []),
+            ["Kontakt", "/#kontakt"]
+          ].map(([label, href]) => (
+            <li><a href={href} class="group flex items-center text-gray-300 transition-colors hover:text-white"><span class="mr-2 h-1.5 w-1.5 rounded-full bg-custom-red transition-transform group-hover:scale-125"></span>{label}</a></li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <h3 class="mb-5 text-xl font-bold text-white">Kontakt</h3>
+        <ul class="space-y-4">
+          <li><a href="tel:+420777644414" class="text-gray-300 transition-colors hover:text-white">+420 777 644 414</a></li>
+          <li><a href="mailto:info@deratservis.cz" class="text-gray-300 transition-colors hover:text-white">info@deratservis.cz</a></li>
+          <li><a href="https://www.facebook.com/profile.php?id=61575994633089" target="_blank" rel="noopener noreferrer" class="text-gray-300 transition-colors hover:text-white">Facebook</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="border-t border-gray-800 py-4">
+    <div class="mx-auto max-w-7xl px-6 text-center text-sm text-gray-400">IČ: 08126160</div>
+  </div>
+  <div class="border-t border-gray-800 py-6">
+    <div class="mx-auto flex max-w-7xl flex-col items-center justify-between px-6 text-sm text-gray-400 md:flex-row">
+      <div class="mb-4 md:mb-0">&copy; {year} Deratservis. Všechna práva vyhrazena.</div>
+      <div class="flex flex-wrap justify-center gap-4 md:justify-end md:gap-6">
+        <a href="/ochrana-osobnich-udaju/" class="transition-colors hover:text-white">Zásady ochrany osobních údajů</a>
+        <a href="/#kontakt" class="transition-colors hover:text-white">Kontakt</a>
+      </div>
+    </div>
+  </div>
+</footer>
