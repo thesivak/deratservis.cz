@@ -10,6 +10,8 @@ export async function getStaticPaths() {
 
 const { service } = Astro.props;
 const { Content } = await service.render();
+const blogPosts = await getCollection("blog");
+const hasBlog = blogPosts.length > 0;
 const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://deratservis.cz";
 const jsonLd = [
   {
@@ -32,7 +34,7 @@ const jsonLd = [
 ].filter(Boolean);
 ---
 
-<BaseLayout title={service.data.seo.title} description={service.data.seo.description} jsonLd={jsonLd}>
+<BaseLayout title={service.data.seo.title} description={service.data.seo.description} jsonLd={jsonLd} hasBlog={hasBlog}>
   <article class="bg-white pb-16 pt-32">
     <div class="mx-auto max-w-4xl px-6">
       <p class="mb-3 text-sm font-semibold uppercase tracking-wide text-orange-700">Služby DERATservis</p>

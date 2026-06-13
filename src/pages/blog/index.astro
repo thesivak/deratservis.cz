@@ -6,12 +6,14 @@ import BlogCard from "@/components/BlogCard.astro";
 const posts = (await getCollection("blog"))
   .filter((post) => !post.data.draft && post.data.publishedAt <= new Date())
   .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+const hasBlog = posts.length > 0;
 ---
 
 <BaseLayout
   title="Blog - DERATservis"
   description="Přečtěte si nejnovější články o deratizaci, dezinsekci, dezinfekci a ochraně dřeva od odborníků DERATservis."
   isBlogPage={true}
+  hasBlog={hasBlog}
 >
   <div class="bg-white pb-16 pt-32">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">

@@ -1,8 +1,12 @@
 ---
+import { getCollection } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const blogPosts = await getCollection("blog");
+const hasBlog = blogPosts.length > 0;
 ---
 
-<BaseLayout title="Zásady ochrany osobních údajů | DERATservis" description="Informace o zpracování osobních údajů při odeslání poptávkového formuláře DERATservis.">
+<BaseLayout title="Zásady ochrany osobních údajů | DERATservis" description="Informace o zpracování osobních údajů při odeslání poptávkového formuláře DERATservis." hasBlog={hasBlog}>
   <main class="bg-white pb-16 pt-32">
     <div class="prose prose-lg mx-auto max-w-4xl px-6">
       <h1>Zásady ochrany osobních údajů</h1>
