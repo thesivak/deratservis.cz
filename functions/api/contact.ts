@@ -13,6 +13,8 @@ type PagesContext<E> = {
 type PagesFunction<E> = (context: PagesContext<E>) => Response | Promise<Response>;
 
 const requiredFields = ["full_name", "email", "phone", "service_type", "notes"];
+const defaultContactToEmail = "info@deratservis.cz";
+const defaultContactFromEmail = "info@deratservis.cz";
 
 export const onRequest: PagesFunction<Env> = async ({ request, env }) => {
   if (request.method !== "POST") {
@@ -62,8 +64,8 @@ export const onRequest: PagesFunction<Env> = async ({ request, env }) => {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      from: env.CONTACT_FROM_EMAIL || "DERATservis <web@deratservis.cz>",
-      to: [env.CONTACT_TO_EMAIL || "info@deratservis.cz"],
+      from: env.CONTACT_FROM_EMAIL || defaultContactFromEmail,
+      to: [env.CONTACT_TO_EMAIL || defaultContactToEmail],
       reply_to: payload.email,
       subject: `Nová poptávka: ${payload.serviceType}`,
       html: renderEmail(payload)
