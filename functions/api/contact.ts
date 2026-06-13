@@ -19,7 +19,12 @@ export const onRequest: PagesFunction<Env> = async ({ request, env }) => {
     return json({ message: "Metoda není povolena." }, 405);
   }
 
-  const formData = await request.formData();
+  let formData: FormData;
+  try {
+    formData = await request.formData();
+  } catch {
+    return json({ message: "Neplatný formát požadavku." }, 400);
+  }
 
   if (String(formData.get("company") || "").trim() !== "") {
     return json({ message: "Děkujeme, zpráva byla přijata." });
