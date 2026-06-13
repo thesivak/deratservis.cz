@@ -1,0 +1,28 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Button from "@/components/Button.astro";
+import { getCollection } from "astro:content";
+
+const blogPosts = await getCollection("blog");
+const hasBlog = blogPosts.length > 0;
+---
+
+<BaseLayout
+  title="Stránka nenalezena | DERATservis"
+  description="Požadovaná stránka nebyla nalezena. Pokračujte na hlavní stránku DERATservis nebo nás kontaktujte."
+  hasBlog={hasBlog}
+>
+  <section class="min-h-[70vh] bg-gradient-to-b from-orange-50 to-white px-8 pb-20 pt-32 md:pt-40">
+    <div class="mx-auto max-w-3xl text-center">
+      <p class="text-sm font-semibold uppercase tracking-wide text-orange-700">404</p>
+      <h1 class="mt-4 text-4xl font-bold text-gray-900 md:text-5xl">Stránka nebyla nalezena</h1>
+      <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-gray-600">
+        Odkaz může být zastaralý nebo stránka již neexistuje. Pokračujte na hlavní stránku nebo nás kontaktujte.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-4">
+        <Button href="/">Zpět na hlavní stránku</Button>
+        <Button href="/#kontakt" class="bg-gray-900 hover:bg-gray-800">Kontakt</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
