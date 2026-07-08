@@ -99,11 +99,9 @@ export const onRequest: PagesFunction<Env> = async ({ request, env }) => {
   }
 
   const token = readField(formData, "cf-turnstile-response");
-  if (token) {
-    const turnstileOk = await verifyTurnstile(token, request, env);
-    if (!turnstileOk) {
-      return json({ message: "Ověření formuláře se nezdařilo. Zkuste to prosím znovu." }, 400);
-    }
+  const turnstileOk = await verifyTurnstile(token, request, env);
+  if (!turnstileOk) {
+    return json({ message: "Ověření formuláře se nezdařilo. Zkuste to prosím znovu." }, 400);
   }
 
   const payload = {
